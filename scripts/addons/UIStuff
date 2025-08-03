@@ -1,0 +1,128 @@
+-- Instances
+
+local Ui = Instance.new("ScreenGui")
+local Text = Instance.new("TextLabel")
+local UICorner = Instance.new("UICorner")
+
+-- Properties
+
+Ui.Name = "Ui"
+Ui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+Ui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+Text.Name = "Text"
+Text.Parent = Ui
+Text.BackgroundColor3 = Color3.new(0.121569, 0.121569, 0.121569)
+Text.BorderColor3 = Color3.new(0, 0, 0)
+Text.BorderSizePixel = 0
+Text.Position = UDim2.new(0.319249123, 0, 0.678309321, 0)
+Text.Size = UDim2.new(0, 275, 0, 24)
+Text.Font = Enum.Font.SourceSans
+Text.TextColor3 = Color3.new(1, 1, 1)
+Text.TextSize = 14
+
+UICorner.Parent = Text
+
+-- Scripts
+
+local function PAFBZH_fake_script() -- Text.LocalScript 
+	local script = Instance.new('LocalScript', Text)
+
+	local Players = game:GetService("Players")
+	local LocalPlayer = Players.LocalPlayer
+	local textLabel = script.Parent
+	
+	local lastHealth = nil
+	
+	local function onHealthChanged(newHealth)
+		if lastHealth ~= nil then
+			local delta = newHealth - lastHealth
+			if delta ~= 0 then
+				local sign = delta > 0 and "+" or ""
+				textLabel.Text = LocalPlayer.Name .. " " .. sign .. tostring(delta) .. " HP"
+			
+				task.spawn(function()
+					task.wait(2)
+					textLabel.Text = ""
+				end)
+			end
+		end
+		lastHealth = newHealth
+	end
+	
+	local function bindToCharacter(character)
+		local humanoid = character:FindFirstChildOfClass("Humanoid")
+		if humanoid then
+			lastHealth = humanoid.Health
+			humanoid.HealthChanged:Connect(onHealthChanged)
+		end
+	end
+	
+	if LocalPlayer.Character then
+		bindToCharacter(LocalPlayer.Character)
+	end
+	
+	LocalPlayer.CharacterAdded:Connect(function(character)
+		bindToCharacter(character)
+	end)
+	
+end
+coroutine.wrap(PAFBZH_fake_script)()
+local function EGWPNMN_fake_script() -- Text.Dragify1 
+	local script = Instance.new('LocalScript', Text)
+
+	local UserInputService = game:GetService("UserInputService")
+	
+	local gui = script.Parent
+	
+	local dragging
+	local dragInput
+	local dragStart
+	local startPos
+	
+	local function update(input)
+		local delta = input.Position - dragStart
+		gui.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+	end
+	
+	gui.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			dragging = true
+			dragStart = input.Position
+			startPos = gui.Position
+	
+			input.Changed:Connect(function()
+				if input.UserInputState == Enum.UserInputState.End then
+					dragging = false
+				end
+			end)
+		end
+	end)
+	
+	gui.InputChanged:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+			dragInput = input
+		end
+	end)
+	
+	UserInputService.InputChanged:Connect(function(input)
+		if input == dragInput and dragging then
+			update(input)
+		end
+	end)
+end
+coroutine.wrap(EGWPNMN_fake_script)()
+local function DCSKG_fake_script() -- Ui.CustomMouse 
+	local script = Instance.new('LocalScript', Ui)
+
+	local axe = 1
+	local player = game.Players.LocalPlayer
+	local mouse = player:GetMouse()
+	
+	while axe == 1 do
+		mouse.Icon = "rbxassetid://9102463858"
+		wait(0.4)
+	
+	end
+end
+coroutine.wrap(DCSKG_fake_script)()
